@@ -89,8 +89,16 @@ ITEM_PIPELINES = {
 #HTTPCACHE_STORAGE = 'scrapy.extensions.httpcache.FilesystemCacheStorage'
 
 # Mysql 数据库配置信息
-MYSQL_DB_NAME = 'db_htock'
-MYSQL_HOST = '172.21.0.14'
+# MYSQL_DB_NAME = 'ares_crowdloan_contribute'
+# MYSQL_HOST = '127.0.0.1'
+# MYSQL_PORT = 3306
+# MYSQL_USER = 'root'
+# MYSQL_PASSWORD = '12345678'
+
+MYSQL_DB_NAME = 'ares_crowdloan_contribute'
+MYSQL_HOST = '152.136.190.11'
 MYSQL_PORT = 3306
-MYSQL_USER = 'db_htock'
-MYSQL_PASSWORD = 'htock19830'
+MYSQL_USER = 'ares_crowdloan_contribute'
+MYSQL_PASSWORD = '12345678'
+
+TIMEZONE = 'Asia/Shanghai'

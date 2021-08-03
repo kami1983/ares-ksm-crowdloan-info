@@ -1,7 +1,9 @@
 import json
+import time
+
 import scrapy
 from crowdloan_contribute.items import ContributorItem, ExtrinsicItem
-
+import random
 
 class SubscanSpider(scrapy.Spider):
     name = 'subscan'
@@ -46,6 +48,12 @@ class SubscanSpider(scrapy.Spider):
         result_data = json.loads(response.body)
         print("Get contributes count is :", len(result_data['data']['contributes']))
         for data in result_data['data']['contributes'] :
+            random_key = random.randint(0, 99999999)
+            if 'Ftd3y3TNMiB7AJshhPJFQBjaaXhhcqqMRxMs1FU2X5j44tw' == data['who'] or\
+                    'FPjQ5Rb5cdyt1LXXTrRwMFbXmf3pTca8XHtdZwaLrtjfMTy' == data['who'] :
+                print("################")
+                print(data)
+                print("--------{}--------", random_key )
             # 解析到 Item 中
             extrinsic_item = ExtrinsicItem()
             extrinsic_item['fund_id'] = data['fund_id']
@@ -58,16 +66,18 @@ class SubscanSpider(scrapy.Spider):
             extrinsic_item['extrinsic_index'] = data['extrinsic_index']
             extrinsic_item['status'] = data['status']
             extrinsic_item['memo'] = data['memo']
+            extrinsic_item['random_key'] = random_key
 
             yield extrinsic_item
 
             contributor_item = ContributorItem()
             contributor_item['address'] = data['who_display']['address']
             contributor_item['display'] = data['who_display']['display']
-            contributor_item['judgements'] = data['who_display']['judgements']
+            contributor_item['judgements'] = '' if data['who_display']['judgements'] == None else json.dumps(data['who_display']['judgements'])
             contributor_item['account_index'] = data['who_display']['account_index']
             contributor_item['identity'] = data['who_display']['identity']
-            contributor_item['parent'] = data['who_display']['parent']
+            contributor_item['parent'] = '' if data['who_display']['parent'] == None else json.dumps(data['who_display']['parent']) # data['who_display']['parent']
+            contributor_item['random_key'] = random_key
 
             yield contributor_item
 
@@ -77,3 +87,7 @@ class SubscanSpider(scrapy.Spider):
             # 如果进入这里证明还有下一页
             self.page_num += 1
             yield self.makeRequest()
+
+    def getRedomKey(self) :
+        # 获取时间戳
+        return "{}-{}".format(time.time(),random.randint(0, 99999999))
