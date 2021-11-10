@@ -7,33 +7,32 @@ import random
 
 class SubscanSpider(scrapy.Spider):
     name = 'subscan'
-    allowed_domains = ['kusama.subscan.io']
-    start_urls = ['https://kusama.subscan.io/api/scan/parachain/contributes']
+    allowed_domains = ['kusama.webapi.subscan.io']
+    start_urls = ['https://kusama.webapi.subscan.io/api/scan/parachain/contributes']
 
     page_size = 25 # 页面大小
     page_num = 0 # 页号
-    fund_id = "2008-10" # 众贷ID
+    fund_id = "2008-30" # 众贷ID
 
     # 定义请求头
     headers = {
-        'authority': 'kusama.subscan.io',
-        'sec-ch-ua': '"Chromium";v="92", " Not A;Brand";v="99", "Google Chrome";v="92"',
-        'accept': 'application/json, text/plain, */*',
+        'authority': 'kusama.webapi.subscan.io',
+        'sec-ch-ua': '"Chromium";v="94", "Google Chrome";v="94", ";Not A Brand";v="99"',
+        'content-type': 'application/json;charset=UTF-8',
         'accept-language': 'zh-CN',
         'sec-ch-ua-mobile': '?0',
-        'user-agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/92.0.4515.107 Safari/537.36',
-        'content-type': 'application/json;charset=UTF-8',
+        'user-agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/94.0.4606.81 Safari/537.36',
+        'sec-ch-ua-platform': '"macOS"',
         'origin': 'https://kusama.subscan.io',
         'sec-fetch-site': 'same-origin',
         'sec-fetch-mode': 'cors',
         'sec-fetch-dest': 'empty',
-        'referer': 'https://kusama.subscan.io/crowdloan_contribute/?fund_id=2008-10',
-        'cookie': 'local_language=zh-CN; __gads=ID=1109176928f7ba91-223e36436eca0060:T=1626829353:RT=1626829353:S=ALNI_MbemXES5sfYvitdGGQ6rf4o6WcPtA; banner=true; _gid=GA1.2.231796429.1627253636; _ga_4Q4YQW2GZ3=GS1.1.1627253637.5.1.1627254119.0; _ga=GA1.1.549609681.1626829349; _gat_UA1525613143=1; _gat_UA1525613147=1'
+        'referer': 'https://kusama.subscan.io/',
     }
 
-    # 生成一个请求
+        # 生成一个请求
     def makeRequest(self) :
-        # 页码
+        # 页码 {"row":25,"page":2,"fund_id":"2008-10"}
         data_raw = {"row": self.page_size, "page": self.page_num, "fund_id": self.fund_id}
         print("Make Request ------------")
         print(data_raw)
@@ -45,6 +44,8 @@ class SubscanSpider(scrapy.Spider):
         yield self.makeRequest()
 
     def parse(self, response):
+        print(response.body)
+        print("##################")
         result_data = json.loads(response.body)
         print("Get contributes count is :", len(result_data['data']['contributes']))
         for data in result_data['data']['contributes'] :
